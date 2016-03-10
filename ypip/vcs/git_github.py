@@ -2,7 +2,9 @@
 # Copyright (c) 2016 Genome Research Limited
 import re
 from urllib.request import urlopen
+from urllib.error import HTTPError
 from typing import List
+from warnings import warn
 
 from ypip.vcs._vcs import HostedVCS
 
@@ -30,7 +32,16 @@ class GitOnGithub(HostedVCS):
             )
 
             with urlopen(req_url) as response:
-                raw = response.read()
+                try:
+                    raw = response.read()
+                except HTTPError as exception:
+                    if exception.code == 404:
+                        msg = '{} not found in {}/{}@{}'.format(requirements, org, repo, branch_tag_or_commit)
+                        print("Warning!", msg)
+                        warn(msg, Warning)
+                    else:
+                        raise exception
+
                 output += raw.splitlines()
 
         return output
