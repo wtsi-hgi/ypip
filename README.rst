@@ -2,16 +2,17 @@ Ypip
 ====
 Ypip (pronounced "yip") is a simple wrapper to Python's pip package
 manager that supports recursive installation of hosted VCS packages.
-That is, it wraps the ``pip install -r`` functionality and, whenever it
-sees a hosted VCS requirement, it will scan through its
-``requirements.txt`` and do the same.
+That is, it will work per ``pip install`` or ``pip install -r`` for PyPI
+and ``requirements.txt`` dependencies, respectively. However, whenever
+it encounters a hosted VCS dependency, it will attempt to fetch its
+requirements and recursively install everything it needs.
 
 Usage::
 
-    ypip [-u] [REQUIREMENTS]
+    ypip [-u] [PACKAGE]
 
-    -u            Upgrade all packages to the newest available version
-    REQUIREMENTS  The requirements file; this will default to requirements.txt
+    -u       Upgrade all packages to the newest available version
+    PACKAGE  The package string; this will default to requirements.txt
 
 Motivation
 ----------
@@ -46,9 +47,11 @@ defined. However, no amount of permutations, experimentation or enquiry
 for. This is thus a hack, so we can stop hardcoding horrible ``curl``
 and ``sed`` commands into our build scripts.
 
-Currently Supported VCSs and Hosts
-----------------------------------
+Currently Supported Package Sources
+-----------------------------------
+- ``requirements.txt``
 - Git on GitHub
+- PyPI
 
 License
 -------

@@ -4,20 +4,22 @@ import sys
 import os.path
 from typing import List
 
-from ypip.sources import RequirementsTxt, \
-                         PyPI, \
-                         GitOnGithub
-
-
-# List of hosted VCS models
-hosted_vcss = [RequirementsTxt(), PyPI(), GitOnGithub()]
-
+# List of package sources, ordered by priority (most important first)
+# n.b., PyPI will effectively catch everything, so must be last
+import ypip.sources as sources
+_sources = [
+    sources.RequirementsTxt(),
+    sources.GitOnGithub(),
+    sources.PyPI()
+]
 
 def usage(exit_code:int):
-    print('''Usage: ypip [-u] [REQUIREMENTS]
-
-    -u            Upgrade all packages to the newest available version
-    REQUIREMENTS  The requirements file; this will default to requirements.txt''')
+    print('\n'.join([
+        'Usage: ypip [-u] [PACKAGE]',
+        '',
+        '-u       Upgrade all packages to the newest available version',
+        'PACKAGE  The package string; this will default to requirements.txt'
+    ]))
 
     sys.exit(exit_code)
 
