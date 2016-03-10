@@ -48,7 +48,7 @@ and ``sed`` commands into our build scripts.
 
 Currently Supported VCSs and Hosts
 ----------------------------------
-- Git with GitHub
+- Git on GitHub
 
 License
 -------
