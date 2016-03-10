@@ -5,12 +5,11 @@ import os.path
 from typing import List
 
 # List of package sources, ordered by priority (most important first)
-# n.b., PyPI will effectively catch everything, so must be last
 import ypip.sources as sources
 _sources = [
     sources.RequirementsTxt(),
     sources.GitOnGithub(),
-    sources.PyPI()
+    sources.PipFallback() # This one must be last
 ]
 
 def usage(exit_code:int):

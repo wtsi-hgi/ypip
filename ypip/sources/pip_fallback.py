@@ -4,9 +4,9 @@ from typing import List
 
 from ypip.sources._source import Source
 
-class PyPI(Source):
+class PipFallback(Source):
     def is_package_from_source(self, pkg:str) -> bool:
-        pass
+        return True
 
     def get_requirements(self, pkg:str) -> List[str]:
-        pass
+        return [pkg]
