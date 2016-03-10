@@ -6,17 +6,17 @@ from urllib.error import HTTPError
 from typing import List
 from warnings import warn
 
-from ypip.vcs._vcs import HostedVCS
+from ypip.sources._source import Source
 
-class GitOnGithub(HostedVCS):
+class GitOnGithub(Source):
     def __init__(self):
         self._url_pattern = re.compile('^git\+(?:git|https|ssh)://github.com/(.+?(?=/))/(.+(?=\.git))\.git@(.+(?=#))#egg=.+$')
-        self._req_url = 'https://raw.githubusercontent.com/{org}/{repo}/{branch_tag_or_commit}/{requirements}'
+        self._req_url = 'https://raw.githubusercontent.com/{org}/{repo}/{branch_tag_or_commit}/requirements.txt'
 
-    def is_package_from_hosted_vcs(self, url:str) -> bool:
+    def is_package_from_source(self, pkg:str) -> bool:
         return True if self._url_pattern.match(url) else False
 
-    def get_requirements(self, url:str, requirements:str = 'requirements.txt') -> List[str]:
+    def get_requirements(self, pkg:str) -> List[str]:
         output = []
         match = self._url_pattern.match(url)
 
@@ -27,8 +27,7 @@ class GitOnGithub(HostedVCS):
             req_url = self._req_url.format(
                 org                  = org,
                 repo                 = repo,
-                branch_tag_or_commit = branch_tag_or_commit,
-                requirements         = requirements
+                branch_tag_or_commit = branch_tag_or_commit
             )
 
             with urlopen(req_url) as response:
@@ -36,7 +35,7 @@ class GitOnGithub(HostedVCS):
                     raw = response.read()
                 except HTTPError as exception:
                     if exception.code == 404:
-                        msg = '{} not found in {}/{}@{}'.format(requirements, org, repo, branch_tag_or_commit)
+                        msg = 'requirements.txt not found in {}/{}@{}'.format(org, repo, branch_tag_or_commit)
                         print("Warning!", msg)
                         warn(msg, Warning)
                     else:
