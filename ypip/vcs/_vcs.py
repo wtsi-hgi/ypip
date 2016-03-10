@@ -1,7 +1,7 @@
 # MIT License
 # Copyright (c) 2016 Genome Research Limited
 from abc import ABCMeta, abstractmethod
-from typing import List, Optional
+from typing import List
 
 class HostedVCS(metaclass=ABCMeta):
     '''
@@ -20,7 +20,7 @@ class HostedVCS(metaclass=ABCMeta):
         '''
 
     @abstractmethod
-    def get_requirements(self, url:str, requirements:Optional[str] = 'requirements.txt') -> List[str]:
+    def get_requirements(self, url:str, requirements:str = 'requirements.txt') -> List[str]:
         '''
         @param   url           Package URL to check
         @param   requirements  Requirements file to fetch
