@@ -6,5 +6,7 @@ setup(
     license = 'MIT',
 
     description = 'Recursive pip for VCS-based packages',
-    long_description = open().read('README.rst')
+    long_description = open().read('README.rst'),
+    
+    scripts = ['ypip/ypip']
 )
