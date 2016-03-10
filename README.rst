@@ -5,7 +5,8 @@ manager that supports recursive installation of hosted VCS packages.
 That is, it will work per ``pip install`` or ``pip install -r`` for PyPI
 and ``requirements.txt`` dependencies, respectively. However, whenever
 it encounters a hosted VCS dependency, it will attempt to fetch its
-requirements and recursively install everything it needs.
+requirements and recursively install everything it needs (like pip
+*should* do, anyway).
 
 Usage::
 
