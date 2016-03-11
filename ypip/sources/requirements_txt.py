@@ -1,7 +1,7 @@
 # MIT License
 # Copyright (c) 2016 Genome Research Limited
 import os.path
-from typing import List
+from typing import List, Optional
 
 from ypip.sources._source import Source
 
@@ -14,3 +14,9 @@ class RequirementsTxt(Source):
             return open(pkg).read().splitlines()
         else:
             return []
+
+    def identify(self, pkg:str) -> Optional[str]:
+        return None
+
+    def version_conflict(self, pkg1:str, pkg2:str) -> Optional[bool]:
+        return None
