@@ -1,3 +1,6 @@
+.. image:: https://travis-ci.org/wtsi-hgi/ypip.svg?branch=master
+    :target: https://travis-ci.org/wtsi-hgi/ypip
+
 Ypip
 ====
 Ypip (pronounced "yip") is a simple wrapper to Python's pip package

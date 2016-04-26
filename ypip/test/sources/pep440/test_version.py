@@ -120,10 +120,8 @@ class TestVersionParsing(unittest.TestCase):
                 _ = Version(v)
 
     def test_complex_normalise(self):
-        """
-        A version string has one compulsory part and five optional
-        parts. Thus, there are 2^5 (32) possible combinations...
-        """
+        # A version string has one compulsory part and five optional
+        # parts. Thus, there are 2^5 (32) possible combinations...
         for epoch in ['', '1!']:
             for pre in ['', 'a0']:
                 for post in ['', '.post0']:
