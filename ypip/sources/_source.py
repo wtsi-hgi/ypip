@@ -10,7 +10,7 @@ class Source(metaclass=ABCMeta):
     @abstractmethod
     def is_package_from_source(self, pkg:str) -> bool:
         '''
-        Check that the package URL conforms to the source modelled by
+        Check that the package string conforms to the source modelled by
         the current class
 
         @param   pkg  Package string to check

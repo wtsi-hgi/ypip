@@ -7,6 +7,6 @@ setup(
 
     description = 'Recursive pip for VCS-based packages',
     long_description = open('README.rst').read(),
-    
+
     scripts = ['ypip/ypip']
 )
