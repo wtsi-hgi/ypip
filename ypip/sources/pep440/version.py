@@ -15,7 +15,7 @@ from typing import Any, Optional
 from functools import total_ordering
 
 
-def _maybe_int(s:Optional[Any]) -> Optional[int]:
+def _maybe_int(s:Any) -> Optional[int]:
     """ Cast to integer, if possible, otherwise None """
     try:
         return int(s)
@@ -24,7 +24,7 @@ def _maybe_int(s:Optional[Any]) -> Optional[int]:
 
 
 class ParseError(Exception):
-    """ Version parse error """
+    """ Version string parse error """
     pass
 
 
@@ -74,15 +74,15 @@ class Version(object):
 
         if parsed.group('post') or parsed.group('postImp'):
             self.post = _maybe_int(parsed.group('postImpN')) \
-                            or _maybe_int(parsed.group('postN')) \
-                            or 0
+                     or _maybe_int(parsed.group('postN')) \
+                     or 0
 
         if parsed.group('dev'):
             self.dev = _maybe_int(parsed.group('devN')) or 0
 
         if parsed.group('local'):
-            # TODO? Split by separator
-            self.local = re.sub('[-_]', '.', parsed.group('local'))
+            norm_local = re.sub('[-_]', '.', parsed.group('local'))
+            self.local = tuple(map(lambda x: int(x) if x.isdecimal() else x, norm_local.split('.')))
 
     def __str__(self):
         output = []
