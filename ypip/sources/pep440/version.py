@@ -102,7 +102,7 @@ class Version(object):
             output.append('.dev{}'.format(self.dev))
 
         if self.local is not None:
-            output.append('+{}'.format(self.local))
+            output.append('+{}'.format('.'.join(map(str, self.local))))
 
         return '{}'.format(''.join(output))
 
