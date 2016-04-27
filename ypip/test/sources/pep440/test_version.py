@@ -150,5 +150,28 @@ class TestVersionOrdering(unittest.TestCase):
         self.assertTrue(Version('1.1') < Version('1.1.1') < Version('1.1.2'))
         self.assertTrue(Version('1.1.2') > Version('1.1.1') > Version('1.1'))
 
+    def test_pre(self):
+        self.assertTrue(Version('1a') == Version('1a'))
+        self.assertTrue(Version('1a2') > Version('1a'))
+        self.assertTrue(Version('1a') < Version('1a2'))
+        self.assertTrue(Version('1') > Version('1rc') > Version('1b') > Version('1a'))
+        self.assertTrue(Version('1a') < Version('1b') < Version('1rc') < Version('1'))
+
+    def test_post(self):
+        self.assertTrue(Version('1.post1') == Version('1.post1'))
+        self.assertTrue(Version('1-2') > Version('1-1') > Version('1'))
+        self.assertTrue(Version('1') < Version('1-1') < Version('1-2'))
+
+    def test_dev(self):
+        self.assertTrue(Version('1.dev1') == Version('1.dev1'))
+        self.assertTrue(Version('1') > Version('1.dev2') > Version('1.dev'))
+        self.assertTrue(Version('1.dev') < Version('1.dev2') < Version('1'))
+
+    def test_local(self):
+        self.assertTrue(Version('1+foo') == Version('1+foo'))
+        self.assertTrue(Version('1+foo.1') > Version('1+foo') > Version('1'))
+        self.assertTrue(Version('1') < Version('1+foo') < Version('1+foo.1'))
+
+
 if __name__ == '__main__':
     unittest.main()

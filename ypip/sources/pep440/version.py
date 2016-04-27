@@ -127,6 +127,7 @@ class Version(object):
 
         if self.pre != other.pre:
             # Prerelease < release
+            # Fortunately 'rc' > 'b' > 'a'
             if self.pre is None:
                 return True
             elif other.pre is None:
@@ -139,7 +140,7 @@ class Version(object):
             if self.post is None:
                 return False
             elif other.post is None:
-                return False
+                return True
             else:
                 return self.post > other.post
 
