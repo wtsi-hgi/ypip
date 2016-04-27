@@ -132,8 +132,23 @@ class TestVersionParsing(unittest.TestCase):
 
 
 class TestVersionOrdering(unittest.TestCase):
-    pass
+    def test_epoch(self):
+        self.assertTrue(Version('1!1') == Version('1!1'))
+        self.assertTrue(Version('2!1') > Version('1!1') > Version('1'))
+        self.assertTrue(Version('1') < Version('1!1') < Version('2!1'))
 
+    def test_release(self):
+        self.assertTrue(Version('1') == Version('1'))
+        self.assertTrue(Version('2') > Version('1'))
+        self.assertTrue(Version('1') < Version('2'))
+
+        self.assertTrue(Version('1.1') == Version('1.1'))
+        self.assertTrue(Version('1') < Version('1.1') < Version('1.2'))
+        self.assertTrue(Version('1.2') > Version('1.1') > Version('1'))
+
+        self.assertTrue(Version('1.1.1') == Version('1.1.1'))
+        self.assertTrue(Version('1.1') < Version('1.1.1') < Version('1.1.2'))
+        self.assertTrue(Version('1.1.2') > Version('1.1.1') > Version('1.1'))
 
 if __name__ == '__main__':
     unittest.main()

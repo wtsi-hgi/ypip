@@ -66,11 +66,11 @@ class Version(object):
         self.local = None
 
         if parsed.group('pre'):
-            pre_type = { 'a': 'a', 'alpha': 'a',
-                         'b': 'b', 'beta': 'b',
-                         'rc': 'rc', 'pre': 'rc', 'preview': 'rc' }[parsed.group('pre').lower()]
+            pre_phase = { 'a': 'a', 'alpha': 'a',
+                          'b': 'b', 'beta': 'b',
+                          'rc': 'rc', 'pre': 'rc', 'preview': 'rc' }[parsed.group('pre').lower()]
             pre_version = _maybe_int(parsed.group('preN')) or 0
-            self.pre = pre_type, pre_version
+            self.pre = pre_phase, pre_version
 
         if parsed.group('post') or parsed.group('postImp'):
             self.post = _maybe_int(parsed.group('postImpN')) \
@@ -117,5 +117,48 @@ class Version(object):
            and self.dev     == other.dev \
            and self.local   == other.local
 
-    def __lt__(self, other:'Version') -> bool:
-        pass
+    def __gt__(self, other:'Version') -> bool:
+        if self.epoch != other.epoch:
+            # No epoch => zero epoch
+            return (self.epoch or 0) > (other.epoch or 0)
+
+        if self.release != other.release:
+            return self.release > other.release
+
+        if self.pre != other.pre:
+            # Prerelease < release
+            if self.pre is None:
+                return True
+            elif other.pre is None:
+                return False
+            else:
+                return self.pre > other.pre
+
+        if self.post != other.post:
+            # Postrelease > release
+            if self.post is None:
+                return False
+            elif other.post is None:
+                return False
+            else:
+                return self.post > other.post
+
+        if self.dev != other.dev:
+            # Development release < release
+            if self.dev is None:
+                return True
+            elif other.dev is None:
+                return False
+            else:
+                return self.dev > other.dev
+
+        if self.local != other.local:
+            # Local release > release
+            if self.local is None:
+                return False
+            elif other.local is None:
+                return True
+            else:
+                # This is disingenuous as the local versions could be
+                # completely different, but that's what the PEP says...
+                return self.local > other.local
