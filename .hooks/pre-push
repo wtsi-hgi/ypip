@@ -1,0 +1,14 @@
+#!/bin/bash
+REPODIR="$(git rev-parse --show-toplevel)"
+VENV="$REPODIR/venv/bin/activate"
+
+# If a virtualenv exists in `venv`, then run the tests before pushing
+if [ -f "$VENV" ]; then
+  source "$VENV"
+  if ! nosetests -v; then
+    warning="Push cancelled! Use --no-verify to bypass"
+    [ -t 2 ] && warning="\033[0;31m${warning}\033[0m"
+    >&2 echo -e "$warning"
+    exit 1
+  fi
+fi
