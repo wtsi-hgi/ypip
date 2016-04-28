@@ -1,5 +1,6 @@
 import unittest
-from ypip.sources.pep440.version import Version, ParseError
+from ypip.sources.pep440.version import Version
+from ypip.sources.pep440.exceptions import ParseError
 
 
 class TestVersionParsing(unittest.TestCase):

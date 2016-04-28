@@ -13,7 +13,7 @@ Copyright (c) 2016 Genome Research Limited
 import re
 from typing import Any, Optional
 from functools import total_ordering
-
+from ypip.sources.pep440.exceptions import ParseError
 
 def _maybe_int(s:Any) -> Optional[int]:
     """ Cast to integer, if possible, otherwise None """
@@ -21,11 +21,6 @@ def _maybe_int(s:Any) -> Optional[int]:
         return int(s)
     except:
         return None
-
-
-class ParseError(Exception):
-    """ Version string parse error """
-    pass
 
 
 @total_ordering
