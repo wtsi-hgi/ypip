@@ -6,6 +6,9 @@ Version specifier objects created by parsing input strings, per PEP440
 
 1. https://www.python.org/dev/peps/pep-0440/
 
+FIXME Only the most common cases implemented; edge cases and "exotic"
+conditions are not considered, when they probably should
+
 License
 -------
 MIT License
@@ -18,6 +21,7 @@ from ypip.sources.pep440.exceptions import ParseError
 class Specifier(object):
     """ Parse version specifier string, a la PEP440 """
 
+    # NOTE Arbitrary equality (===) is not fully supported
     pattern = re.compile(r'''
         ^
         (?P<op>===|[~!=<>]=|<|>)
@@ -38,6 +42,9 @@ class Specifier(object):
         specifiers = re.split(r'\s*,\s*', spec.strip())
         self.comparators = []
 
+        if not specifiers:
+            raise ParseError('Specifier string is empty')
+
         for s in specifiers:
             parsed = Specifier.pattern.match(s)
 
@@ -45,14 +52,15 @@ class Specifier(object):
                 raise ParseError('Could not parse "{}" in accordance with PEP440'.format(s))
 
             v = parsed.group('v')
-            has_wildcard = Specifier.wildcard.search(v)
+            op = parsed.group('op')
+            has_wildcard = op in ['==', '!='] and Specifier.wildcard.search(v)
 
             if has_wildcard:
                 # Strip wildcard from version string
                 v = Specifier.wildcard.split(v)[0]
 
             version = Version(v)
-            
+
             # TODO At this point, we've got a valid Version and a valid
             # comparison operator... Now to do something useful: create
             # a function that applies the argument against the operator
@@ -66,4 +74,4 @@ class Specifier(object):
         @param   version  Version to check against specification
         @return  Boolean
         """
-        return all(comp(version) for comp in comparitors)
+        return all(comp(version) for comp in self.comparators)

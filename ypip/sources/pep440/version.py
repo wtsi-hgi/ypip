@@ -157,4 +157,8 @@ class Version(object):
             else:
                 # This is disingenuous as the local versions could be
                 # completely different, but that's what the PEP says...
+
+                # FIXME Integer components are defined to be greater
+                # than respective string components, but Python will
+                # instead throw a TypeError (unorderable types)
                 return self.local > other.local
