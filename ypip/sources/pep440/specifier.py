@@ -15,8 +15,37 @@ MIT License
 Copyright (c) 2016 Genome Research Limited
 """
 import re
+from typing import Callable
 from ypip.sources.pep440.version import Version
 from ypip.sources.pep440.exceptions import ParseError
+
+
+_PredicateT = Callable[[Version], bool]
+
+def _equality_factory(rhs:Version, wildcard:bool) -> _PredicateT:
+    pass
+
+def _inequality_factory(rhs:Version, wildcard:bool) -> _PredicateT:
+    pass
+
+def _absolute_factory(rhs:Version) -> _PredicateT:
+    pass
+
+def _lt_factory(rhs:Version) -> _PredicateT:
+    pass
+
+def _lte_factory(rhs:Version) -> _PredicateT:
+    pass
+
+def _gt_factory(rhs:Version) -> _PredicateT:
+    pass
+
+def _gte_factory(rhs:Version) -> _PredicateT:
+    pass
+
+def _compatible_factory(rhs:Version) -> _PredicateT:
+    pass
+
 
 class Specifier(object):
     """ Parse version specifier string, a la PEP440 """
@@ -31,6 +60,17 @@ class Specifier(object):
     ''', re.VERBOSE | re.IGNORECASE)
 
     wildcard = re.compile(r'\.?\d*\*')
+
+    factory = {
+        '==':  _equality_factory,
+        '!=':  _inequality_factory,
+        '===': lambda v, _: _absolute_factory(v),
+        '<':   lambda v, _: _lt_factory(v),
+        '<=':  lambda v, _: _lte_factory(v),
+        '>':   lambda v, _: _gt_factory(v),
+        '>=':  lambda v, _: _gte_factory(v),
+        '~=':  lambda v, _: _compatible_factory(v)
+    }
 
     def __init__(self, spec:str):
         """
@@ -53,19 +93,16 @@ class Specifier(object):
 
             v = parsed.group('v')
             op = parsed.group('op')
-            has_wildcard = op in ['==', '!='] and Specifier.wildcard.search(v)
 
+            has_wildcard = op in ['==', '!='] and Specifier.wildcard.search(v)
             if has_wildcard:
                 # Strip wildcard from version string
                 v = Specifier.wildcard.split(v)[0]
 
             version = Version(v)
 
-            # TODO At this point, we've got a valid Version and a valid
-            # comparison operator... Now to do something useful: create
-            # a function that applies the argument against the operator
-            # and RHS version and append it to a list.
-            # self.comparators.append(...)
+            # Add comparator predicate to conjunction
+            self.comparators.append(Specifier.factory[op](version, has_wildcard))
 
     def __call__(self, version:Version) -> bool:
         """
