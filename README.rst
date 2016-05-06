@@ -1,5 +1,7 @@
 .. image:: https://travis-ci.org/wtsi-hgi/ypip.svg?branch=master
     :target: https://travis-ci.org/wtsi-hgi/ypip
+.. image:: https://codecov.io/gh/wtsi-hgi/ypip/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/wtsi-hgi/ypip
 
 Ypip
 ====
